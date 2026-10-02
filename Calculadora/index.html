@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Minha Calculadora</title>
+
+    <style>
+
+        /* =========================
+           CONFIGURAÇÕES GERAIS
+        ========================= */
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+
+            font-family: Arial, Helvetica, sans-serif;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            position: relative;
+            overflow: hidden;
+
+            /* Fundo profissional */
+            background:
+                radial-gradient(
+                    circle at 10% 20%,
+                    rgba(238, 92, 153, 0.20),
+                    transparent 30%
+                ),
+
+                radial-gradient(
+                    circle at 90% 80%,
+                    rgba(170, 90, 210, 0.18),
+                    transparent 32%
+                ),
+
+                linear-gradient(
+                    135deg,
+                    #171219,
+                    #21151f,
+                    #2d1927
+                );
+        }
+
+
+        /* =========================
+           LUZES DO FUNDO
+        ========================= */
+
+        body::before {
+            content: "";
+
+            position: absolute;
+
+            width: 350px;
+            height: 350px;
+
+            top: -150px;
+            left: -100px;
+
+            background: rgba(236, 78, 145, 0.20);
+
+            border-radius: 50%;
+
+            filter: blur(90px);
+        }
+
+
+        body::after {
+            content: "";
+
+            position: absolute;
+
+            width: 400px;
+            height: 400px;
+
+            bottom: -180px;
+            right: -120px;
+
+            background: rgba(157, 82, 205, 0.18);
+
+            border-radius: 50%;
+
+            filter: blur(100px);
+        }
+
+
+        /* =========================
+           CALCULADORA
+        ========================= */
+
+        .calculadora {
+
+            width: 440px;
+
+            padding: 40px;
+
+            background: rgba(255, 255, 255, 0.97);
+
+            border-radius: 25px;
+
+            box-shadow:
+                0 25px 70px rgba(0, 0, 0, 0.40);
+
+            position: relative;
+
+            z-index: 2;
+        }
+
+
+        /* =========================
+           CABEÇALHO
+        ========================= */
+
+        .topo {
+            text-align: center;
+
+            margin-bottom: 32px;
+        }
+
+
+        .icone {
+
+            width: 62px;
+            height: 62px;
+
+            margin: 0 auto 16px;
+
+            display: flex;
+
+            justify-content: center;
+            align-items: center;
+
+            border-radius: 18px;
+
+            font-size: 29px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #f083ae,
+                    #c94d7d
+                );
+
+            box-shadow:
+                0 8px 20px rgba(201, 77, 125, 0.30);
+        }
+
+
+        h1 {
+
+            margin: 0;
+
+            color: #68233f;
+
+            font-size: 30px;
+        }
+
+
+        .subtitulo {
+
+            margin-top: 9px;
+
+            color: #999;
+
+            font-size: 14px;
+        }
+
+
+        /* =========================
+           CAMPOS
+        ========================= */
+
+        .campo {
+
+            margin-bottom: 19px;
+        }
+
+
+        .campo label {
+
+            display: block;
+
+            margin-bottom: 8px;
+
+            color: #692542;
+
+            font-size: 14px;
+
+            font-weight: bold;
+        }
+
+
+        input {
+
+            width: 100%;
+
+            padding: 14px 15px;
+
+            border: 2px solid #ead5de;
+
+            border-radius: 12px;
+
+            outline: none;
+
+            font-size: 16px;
+
+            transition: 0.3s;
+        }
+
+
+        input::placeholder {
+            color: #b8b8b8;
+        }
+
+
+        input:focus {
+
+            border-color: #d85b8b;
+
+            box-shadow:
+                0 0 0 4px rgba(216, 91, 139, 0.10);
+        }
+
+
+        /* =========================
+           TÍTULOS DAS SEÇÕES
+        ========================= */
+
+        .titulo-secao {
+
+            margin-top: 27px;
+            margin-bottom: 12px;
+
+            color: #692542;
+
+            font-size: 12px;
+
+            font-weight: bold;
+
+            letter-spacing: 1px;
+
+            text-transform: uppercase;
+        }
+
+
+        /* =========================
+           BOTÕES
+        ========================= */
+
+        .botoes {
+
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 10px;
+        }
+
+
+        button {
+
+            padding: 13px 8px;
+
+            border: none;
+
+            border-radius: 11px;
+
+            background: #d85b8b;
+
+            color: white;
+
+            font-size: 14px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: all 0.2s ease;
+        }
+
+
+        button:hover {
+
+            background: #b83e6c;
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 7px 16px rgba(184, 62, 108, 0.28);
+        }
+
+
+        button:active {
+
+            transform: scale(0.97);
+        }
+
+
+        /* =========================
+           BOTÕES DE ÁREA
+        ========================= */
+
+        .areas button {
+
+            background: #b568c0;
+        }
+
+
+        .areas button:hover {
+
+            background: #95469f;
+
+            box-shadow:
+                0 7px 16px rgba(149, 70, 159, 0.25);
+        }
+
+
+        /* =========================
+           RESULTADO
+        ========================= */
+
+        .resultado-box {
+
+            margin-top: 30px;
+
+            padding: 20px;
+
+            text-align: center;
+
+            background: #fff5f9;
+
+            border: 1px solid #f0d3df;
+
+            border-radius: 15px;
+        }
+
+
+        .resultado-titulo {
+
+            margin-bottom: 7px;
+
+            color: #999;
+
+            font-size: 11px;
+
+            font-weight: bold;
+
+            letter-spacing: 1.5px;
+        }
+
+
+        #resultado {
+
+            color: #b52f65;
+
+            font-size: 26px;
+
+            font-weight: bold;
+        }
+
+
+        /* =========================
+           RODAPÉ
+        ========================= */
+
+        .rodape {
+
+            margin-top: 22px;
+
+            text-align: center;
+
+            color: #aaa;
+
+            font-size: 11px;
+        }
+
+
+        /* =========================
+           CELULAR
+        ========================= */
+
+        @media (max-width: 500px) {
+
+            body {
+
+                padding: 20px;
+
+                overflow: auto;
+            }
+
+
+            .calculadora {
+
+                width: 100%;
+
+                padding: 28px 22px;
+            }
+
+
+            h1 {
+
+                font-size: 26px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================
+         CALCULADORA
+    ========================= -->
+
+    <div class="calculadora">
+
+
+        <!-- CABEÇALHO -->
+
+        <div class="topo">
+
+            <div class="icone">
+                🧮
+            </div>
+
+            <h1>
+                Minha Calculadora
+            </h1>
+
+            <p class="subtitulo">
+                Faça seus cálculos de forma rápida e simples
+            </p>
+
+        </div>
+
+
+        <!-- PRIMEIRO NÚMERO -->
+
+        <div class="campo">
+
+            <label for="n1">
+                Primeiro Número
+            </label>
+
+            <input
+                type="number"
+                id="n1"
+                placeholder="Digite um número"
+            >
+
+        </div>
+
+
+        <!-- SEGUNDO NÚMERO -->
+
+        <div class="campo">
+
+            <label for="n2">
+                Segundo Número
+            </label>
+
+            <input
+                type="number"
+                id="n2"
+                placeholder="Digite outro número"
+            >
+
+        </div>
+
+
+        <!-- OPERAÇÕES -->
+
+        <div class="titulo-secao">
+            Operações
+        </div>
+
+
+        <div class="botoes">
+
+            <button onclick="somar()">
+                + Somar
+            </button>
+
+            <button onclick="subtrair()">
+                − Subtrair
+            </button>
+
+            <button onclick="multiplicar()">
+                × Multiplicar
+            </button>
+
+            <button onclick="dividir()">
+                ÷ Dividir
+            </button>
+
+        </div>
+
+
+        <!-- ÁREAS -->
+
+        <div class="titulo-secao">
+            Cálculo de Áreas
+        </div>
+
+
+        <div class="botoes areas">
+
+            <button onclick="areaQuadrado()">
+                Área do Quadrado
+            </button>
+
+            <button onclick="areaTriangulo()">
+                Área do Triângulo
+            </button>
+
+            <button onclick="areaRetangulo()">
+                Área do Retângulo
+            </button>
+
+        </div>
+
+
+        <!-- RESULTADO -->
+
+        <div class="resultado-box">
+
+            <div class="resultado-titulo">
+                RESULTADO
+            </div>
+
+            <span id="resultado">
+                —
+            </span>
+
+        </div>
+
+
+        <!-- RODAPÉ -->
+
+        <div class="rodape">
+            Calculadora desenvolvida em HTML, CSS e JavaScript
+        </div>
+
+
+    </div>
+
+
+    <!-- SEU JAVASCRIPT -->
+
+    <script src="js/calculo.js"></script>
+
+
+</body>
+
+</html>
